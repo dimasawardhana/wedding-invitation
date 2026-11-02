@@ -6,6 +6,10 @@ import { defineConfig, devices } from "@playwright/test";
 // unrelated projects, hence 8090 for the API.
 const API_PORT = Number(process.env.E2E_API_PORT ?? 8090);
 const WEB_PORT = Number(process.env.E2E_WEB_PORT ?? 3101);
+// Host-side ports for the dockerized Postgres/MinIO the suite depends on
+// (overridable when other local stacks already bind the defaults).
+const DB_PORT = Number(process.env.E2E_DB_PORT ?? process.env.DB_PORT ?? 5432);
+const MINIO_API_PORT = Number(process.env.E2E_MINIO_PORT ?? process.env.MINIO_API_PORT ?? 9000);
 
 const API_BASE = `http://localhost:${API_PORT}`;
 
@@ -70,14 +74,14 @@ export default defineConfig({
       reuseExistingServer: false,
       timeout: 120_000,
       env: {
-        DB_DSN: "host=localhost user=postgres password=secret dbname=wedding_e2e port=5432 sslmode=disable",
+        DB_DSN: `host=localhost user=postgres password=secret dbname=wedding_e2e port=${DB_PORT} sslmode=disable`,
         PORT: String(API_PORT),
         JWT_SECRET: "e2e-secret",
-        S3_ENDPOINT: "http://localhost:9000",
+        S3_ENDPOINT: `http://localhost:${MINIO_API_PORT}`,
         S3_ACCESS_KEY: "minioadmin",
         S3_SECRET_KEY: "minioadmin",
         S3_BUCKET: "wedding-uploads",
-        S3_PUBLIC_URL: "http://localhost:9000/wedding-uploads",
+        S3_PUBLIC_URL: `http://localhost:${MINIO_API_PORT}/wedding-uploads`,
       },
     },
     {
@@ -91,6 +95,7 @@ export default defineConfig({
       timeout: 180_000,
       env: {
         NEXT_PUBLIC_API_BASE_URL: API_BASE,
+        NEXT_PUBLIC_MINIO_PORT: String(MINIO_API_PORT),
       },
     },
   ],

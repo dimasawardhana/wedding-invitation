@@ -44,7 +44,7 @@ test.describe("Dashboard Galeri tab", () => {
 
     const stored = await fetchInvitation(request, account);
     const storedUrl = stored.gallery[0].url;
-    expect(storedUrl).toContain("localhost:9000/wedding-uploads/");
+    expect(storedUrl).toContain(`localhost:${process.env.E2E_MINIO_PORT ?? process.env.MINIO_API_PORT ?? 9000}/wedding-uploads/`);
 
     // The object really exists in MinIO.
     await expect.poll(async () => (await listStoredObjects()).length, { timeout: 20_000 }).toBeGreaterThan(0);

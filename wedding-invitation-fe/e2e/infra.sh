@@ -11,6 +11,8 @@ COMPOSE_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../wedding-invitation-be" 
 E2E_DB="${E2E_DB:-wedding_e2e}"
 
 echo "==> Starting Postgres + MinIO"
+# Port collisions with other local stacks are handled by shifting the host-side
+# mappings via env: DB_PORT, MINIO_API_PORT, MINIO_CONSOLE_PORT.
 docker compose -f "$COMPOSE_FILE" up -d db minio minio-init
 
 echo "==> Waiting for Postgres"
