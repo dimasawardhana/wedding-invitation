@@ -15,6 +15,8 @@ import {
   ArrowLeft,
   Images,
   Palette,
+  Globe,
+  EyeOff,
 } from "lucide-react";
 import OverviewTab from "./tabs/OverviewTab";
 import GuestsTab from "./tabs/GuestsTab";
@@ -22,6 +24,7 @@ import GalleryTab from "./tabs/GalleryTab";
 import ThemeTab from "./tabs/ThemeTab";
 import { useInvitationStore } from "@/store/useInvitationStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { patchInvitation } from "@/lib/api";
 
 type TabId = "overview" | "guests" | "galeri" | "tema";
 
@@ -63,12 +66,30 @@ function NavItem({
 export default function DashboardLayout() {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
+  const [publishPending, setPublishPending] = useState(false);
   const router = useRouter();
-  const { groomName, brideName, slug } = useInvitationStore();
+  const { groomName, brideName, slug, status, invitationId, updateInvitation } = useInvitationStore();
   const { user, clearAuth } = useAuthStore();
   const resetInvitation = useInvitationStore((s) => s.resetInvitation);
   const displayName = groomName && brideName ? `${groomName} & ${brideName}` : "Undangan Saya";
+  const published = status === "published";
   const avatarLetter = groomName?.[0]?.toUpperCase() ?? "U";
+
+  async function togglePublish() {
+    if (!invitationId || publishPending) return;
+    setPublishPending(true);
+    setPublishError(null);
+    const next = published ? "draft" : "published";
+    try {
+      await patchInvitation(invitationId, { status: next });
+      updateInvitation({ status: next });
+    } catch (err) {
+      setPublishError(err instanceof Error ? err.message : "Gagal mengubah status.");
+    } finally {
+      setPublishPending(false);
+    }
+  }
 
   function handleLogout() {
     clearAuth();
@@ -157,6 +178,32 @@ export default function DashboardLayout() {
             <ExternalLink className="w-4 h-4 shrink-0" />
             <span>Lihat Undangan</span>
           </a>
+          {invitationId && (
+            <>
+              <button
+                onClick={togglePublish}
+                disabled={publishPending}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all w-full disabled:opacity-50 ${
+                  published
+                    ? "text-green-700 bg-green-50 hover:bg-green-100"
+                    : "text-white bg-gray-900 hover:bg-gray-800"
+                }`}
+              >
+                {published ? <Globe className="w-4 h-4 shrink-0" /> : <EyeOff className="w-4 h-4 shrink-0" />}
+                <span>
+                  {publishPending ? "Memproses..." : published ? "Terpublikasi" : "Publikasikan"}
+                </span>
+              </button>
+              {publishError && (
+                <p className="px-3 text-xs text-red-500">{publishError}</p>
+              )}
+              <p className="px-3 text-xs text-gray-400">
+                {published
+                  ? `Terlihat publik di /${slug}`
+                  : "Draf — hanya kamu yang bisa melihat"}
+              </p>
+            </>
+          )}
           {user && (
             <div className="pt-2 border-t border-gray-200 mt-2">
               <p className="px-3 text-xs text-gray-400 truncate mb-1">{user.email}</p>

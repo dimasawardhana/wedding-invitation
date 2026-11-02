@@ -34,6 +34,7 @@ export type ThemeConfig = {
 export type InvitationStoreState = {
   invitationId: string;
   slug: string;
+  status: "draft" | "published";
   heroImage: string;
   title: string;
   groomName: string;
@@ -59,6 +60,7 @@ type InvitationStore = InvitationStoreState & {
 const DEFAULT_STATE: InvitationStoreState = {
   invitationId: "",
   slug: "tony-stella",
+  status: "draft",
   heroImage: "",
   title: "The Wedding of Tony & Stella",
   groomName: "Tony",

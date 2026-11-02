@@ -20,6 +20,7 @@ type Invitation struct {
 	Events      datatypes.JSON `json:"events" gorm:"type:jsonb"`
 	Stories     datatypes.JSON `json:"stories" gorm:"type:jsonb"`
 	Gallery     datatypes.JSON `json:"gallery" gorm:"type:jsonb"`
+	Status      string         `json:"status" gorm:"not null;default:draft;index"`
 	Views       int64          `json:"views" gorm:"not null;default:0"`
 	CreatedAt   time.Time      `json:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at"`

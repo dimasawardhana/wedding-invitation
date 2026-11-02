@@ -678,7 +678,18 @@ func TestDeleteMediaRejectsForeignURL(t *testing.T) {
 
 func TestPublicInvitation(t *testing.T) {
 	h := newHarness(t)
-	_, _ = h.createInvitation(t, "public@example.com", "public-slug")
+	token, invID := h.createInvitation(t, "public@example.com", "public-slug")
+
+	t.Run("draft is hidden from public", func(t *testing.T) {
+		// Newly created invitations start as drafts: same 404 as a missing slug.
+		wantStatus(t, h.do(t, http.MethodGet, "/api/v1/public/invitation/public-slug", "", nil), http.StatusNotFound)
+	})
+
+	// Publish, after which the slug becomes publicly visible.
+	rec := h.do(t, http.MethodPatch, "/api/v1/admin/invitation/"+invID.String(), token, map[string]any{
+		"status": "published",
+	})
+	wantStatus(t, rec, http.StatusOK)
 
 	t.Run("by slug", func(t *testing.T) {
 		env := wantStatus(t, h.do(t, http.MethodGet, "/api/v1/public/invitation/public-slug", "", nil), http.StatusOK)

@@ -43,9 +43,12 @@ type ApiThemeConfig = {
   fontPair?: string;
 };
 
+export type InvitationStatus = "draft" | "published";
+
 export type ApiInvitation = {
   id: string;
   slug: string;
+  status: InvitationStatus;
   layout_id: string | null;
   theme_config: ApiThemeConfig | null;
   music_url: string | null;
@@ -79,6 +82,7 @@ export type PatchInvitationPayload = {
   events?: ApiInvitation["events"];
   stories?: ApiInvitation["stories"];
   gallery?: ApiGalleryItem[];
+  status?: InvitationStatus;
 };
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -290,6 +294,7 @@ export function apiInvitationToStoreState(api: ApiInvitation): Partial<Invitatio
   return {
     invitationId: api.id,
     slug: api.slug,
+    status: api.status,
     title: data.title,
     groomName: data.groomName,
     brideName: data.brideName,

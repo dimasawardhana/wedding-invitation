@@ -14,7 +14,18 @@ var (
 	ErrInvitationNotFound = errors.New("invitation not found")
 	ErrSlugConflict       = errors.New("slug already in use")
 	ErrForbidden          = errors.New("forbidden")
+	ErrInvalidStatus      = errors.New("invalid status")
 )
+
+// Invitation lifecycle states. Drafts are hidden from the public site.
+const (
+	StatusDraft     = "draft"
+	StatusPublished = "published"
+)
+
+func IsValidStatus(s string) bool {
+	return s == StatusDraft || s == StatusPublished
+}
 
 type CreateInvitationInput struct {
 	Slug        string
@@ -36,6 +47,7 @@ type UpdateInvitationInput struct {
 	Events      datatypes.JSON
 	Stories     datatypes.JSON
 	Gallery     datatypes.JSON
+	Status      *string
 }
 
 type InvitationService interface {
@@ -106,7 +118,14 @@ func (s *invitationService) GetBySlug(slug string) (*domain.Invitation, error) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrInvitationNotFound
 	}
-	return inv, err
+	if err != nil {
+		return nil, err
+	}
+	// Drafts are invisible on the public site — same 404 as a missing slug.
+	if inv.Status != StatusPublished {
+		return nil, ErrInvitationNotFound
+	}
+	return inv, nil
 }
 
 func (s *invitationService) IncrementViews(slug string) (int64, error) {
@@ -162,6 +181,12 @@ func (s *invitationService) Update(id, userID uuid.UUID, input UpdateInvitationI
 	}
 	if input.Gallery != nil {
 		inv.Gallery = input.Gallery
+	}
+	if input.Status != nil {
+		if !IsValidStatus(*input.Status) {
+			return nil, ErrInvalidStatus
+		}
+		inv.Status = *input.Status
 	}
 
 	if err := s.repo.Update(inv); err != nil {

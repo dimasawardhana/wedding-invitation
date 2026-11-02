@@ -157,6 +157,7 @@ func (h *InvitationHandler) Update(c *gin.Context) {
 		Events      datatypes.JSON `json:"events"`
 		Stories     datatypes.JSON `json:"stories"`
 		Gallery     datatypes.JSON `json:"gallery"`
+		Status      *string        `json:"status"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		badRequest(c, err.Error())
@@ -172,6 +173,7 @@ func (h *InvitationHandler) Update(c *gin.Context) {
 		Events:      input.Events,
 		Stories:     input.Stories,
 		Gallery:     input.Gallery,
+		Status:      input.Status,
 	})
 	if err != nil {
 		switch {
@@ -181,6 +183,8 @@ func (h *InvitationHandler) Update(c *gin.Context) {
 			forbidden(c)
 		case errors.Is(err, service.ErrSlugConflict):
 			conflict(c, err.Error())
+		case errors.Is(err, service.ErrInvalidStatus):
+			badRequest(c, err.Error())
 		default:
 			serverError(c, err)
 		}
