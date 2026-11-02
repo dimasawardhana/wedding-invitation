@@ -28,6 +28,11 @@ export const TEMPLATE_REGISTRY = [
     name: "Minimalist",
     description: "Tipografi bersih, monokrom",
   },
+  {
+    id: "classic",
+    name: "Classic",
+    description: "Formal tradisional, bingkai ganda",
+  },
 ] as const;
 
 export type TemplateId = (typeof TEMPLATE_REGISTRY)[number]["id"];
@@ -46,6 +51,7 @@ export const TEMPLATE_MAP: Record<string, ComponentType<TemplateProps>> = {
   islamic: loader(import("./IslamicTemplate")),
   rustic: loader(import("./RusticTemplate")),
   minimalist: loader(import("./MinimalistTemplate")),
+  classic: loader(import("./ClassicTemplate")),
 };
 
 export const DEFAULT_TEMPLATE_ID: TemplateId = "storyteller";
