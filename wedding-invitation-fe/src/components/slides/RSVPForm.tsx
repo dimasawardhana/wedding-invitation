@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Wish } from "@/hooks/useInvitation";
 import { submitRsvp } from "@/lib/api";
 
@@ -105,6 +105,8 @@ export default function RSVPForm({ initialWishes, invitationId }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<FormData>({
     name: "",
     attendance: "hadir",
@@ -120,23 +122,35 @@ export default function RSVPForm({ initialWishes, invitationId }: Props) {
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
+      if (!invitationId) {
+        throw new Error("Undangan belum tersimpan. Coba muat ulang halaman.");
+      }
+      await submitRsvp({
+        invitation_id: invitationId,
+        guest_name: data.name,
+        attendance_status: data.attendance === "hadir",
+        total_pax: data.guests,
+        message: data.message,
+      });
+    },
+    onSuccess: () => {
+      setSubmitError(null);
+      setSubmitted(true);
       if (invitationId) {
-        await submitRsvp({
-          invitation_id: invitationId,
-          guest_name: data.name,
-          attendance_status: data.attendance === "hadir",
-          total_pax: data.guests,
-          message: data.message,
-        });
+        void queryClient.invalidateQueries({ queryKey: ["invitation"] });
+        void queryClient.invalidateQueries({ queryKey: ["wishes"] });
       }
     },
-    onSuccess: () => setSubmitted(true),
+    onError: (err: Error) => {
+      setSubmitError(err.message || "Gagal mengirim konfirmasi. Coba lagi.");
+    },
   });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     e.stopPropagation();
     if (!form.name.trim()) return;
+    setSubmitError(null);
     mutation.mutate(form);
   }
 
@@ -256,6 +270,12 @@ export default function RSVPForm({ initialWishes, invitationId }: Props) {
                 value={form.message}
                 onChange={(v) => setForm((f) => ({ ...f, message: v }))}
               />
+
+              {submitError && (
+                <p className="font-sans text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2 text-center">
+                  {submitError}
+                </p>
+              )}
 
               <motion.button
                 type="submit"
