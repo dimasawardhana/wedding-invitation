@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Playwright output
+test-results/
+playwright-report/
+blob-report/
+
+# Go build output — binaries land next to the source unless -o points elsewhere
+wedding-invitation-be/wedding-invitation-be
+/wedding-invitation-be/server
+
+# Environment
+.env
+.env.*
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
