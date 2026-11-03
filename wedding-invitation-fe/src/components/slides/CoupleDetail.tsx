@@ -45,6 +45,7 @@ type ProfileProps = {
 };
 
 function Profile({ fullName, photo, fatherName, motherName, order, variants, accentColor = "#C9A96E" }: ProfileProps) {
+  const parents = [fatherName, motherName].filter(Boolean).join(" & ");
   return (
     <motion.div
       variants={variants}
@@ -65,10 +66,7 @@ function Profile({ fullName, photo, fatherName, motherName, order, variants, acc
 
       <p className="font-sans text-sm font-light text-stone-500 text-center leading-relaxed">
         {order}
-        <br />
-        <span className="text-stone-600">{fatherName}</span>
-        <span className="text-stone-400"> &amp; </span>
-        <span className="text-stone-600">{motherName}</span>
+        {parents && <><br /><span className="text-stone-600">{parents}</span></>}
       </p>
     </motion.div>
   );

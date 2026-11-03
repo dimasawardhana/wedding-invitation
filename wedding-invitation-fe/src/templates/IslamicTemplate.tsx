@@ -90,7 +90,7 @@ export default function IslamicTemplate({
 
   return (
     <div
-      className="h-screen w-full overflow-y-auto overflow-x-hidden"
+      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
       style={{
         ...fontVarsFor(theme?.fontPair),
         scrollSnapType: "y mandatory",
@@ -140,7 +140,7 @@ export default function IslamicTemplate({
           <CoupleDetail groom={data.groom} bride={data.bride} accentColor={EMERALD} />
         </Section>
 
-        {data.events.length > 0 && (
+        {data.weddingEvents.length > 0 && (
           <Section id="events">
             <SectionTitle>Rangkaian Acara</SectionTitle>
             <Ornament className="mb-6" />

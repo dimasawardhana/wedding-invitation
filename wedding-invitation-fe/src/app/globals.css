@@ -3,6 +3,18 @@
 :root {
   --background: #F8F5F2;
   --foreground: #171717;
+  /* Network-independent font stacks keep production builds deterministic.
+     The first installed face wins; templates retain their serif/sans character
+     even when a hosted webfont is unavailable. */
+  --font-geist-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-geist-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-playfair: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-cormorant: "Cormorant Garamond", Garamond, Georgia, serif;
+  --font-inter: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-libre: "Libre Baskerville", Georgia, serif;
+  --font-lato: Lato, ui-sans-serif, system-ui, sans-serif;
+  --font-montserrat: Montserrat, ui-sans-serif, system-ui, sans-serif;
+  --font-open-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {

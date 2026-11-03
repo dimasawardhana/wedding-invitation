@@ -1,3 +1,6 @@
+# Seraph runtime state (board is managed through MCP)
+.seraph/
+
 # Dependencies
 node_modules/
 

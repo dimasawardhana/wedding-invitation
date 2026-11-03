@@ -92,7 +92,7 @@ export default function ClassicTemplate({
 
   return (
     <div
-      className="h-screen w-full overflow-y-auto overflow-x-hidden"
+      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
       style={{
         ...fontVarsFor(theme?.fontPair),
         backgroundColor: CHAMPAGNE,

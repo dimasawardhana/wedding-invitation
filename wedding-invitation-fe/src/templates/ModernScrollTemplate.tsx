@@ -11,6 +11,7 @@ import { useCountdown, type Countdown } from "@/hooks/useCountdown";
 import RSVPForm from "@/components/slides/RSVPForm";
 import AddToCalendarButton from "@/components/slides/AddToCalendarButton";
 import { COLOR_SCHEME_MAP, DEFAULT_ACCENT, fontVarsFor } from "@/lib/theme";
+import { formatInvitationDate } from "@/lib/invitation-display";
 
 function fadeUp(delay = 0) {
   return {
@@ -145,7 +146,7 @@ function HeroSection({
               className="font-sans text-xs tracking-[0.25em] uppercase mb-8"
               style={{ color: accent }}
             >
-              {new Date(data.weddingDate).toLocaleDateString("id-ID", {
+              {formatInvitationDate(data.weddingDate, {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
@@ -207,7 +208,7 @@ function HeroSection({
               className="font-sans text-xs tracking-[0.25em] uppercase mb-8"
               style={{ color: accent }}
             >
-              {new Date(data.weddingDate).toLocaleDateString("id-ID", {
+              {formatInvitationDate(data.weddingDate, {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
@@ -422,7 +423,7 @@ function EventsSection({
   data: TemplateProps["data"];
   accent: string;
 }) {
-  const dateStr = new Date(data.weddingDate).toLocaleDateString("id-ID", {
+  const dateStr = formatInvitationDate(data.weddingDate, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -758,7 +759,7 @@ export default function ModernScrollTemplate({
   return (
     <div
       ref={containerRef}
-      className="h-screen w-full overflow-y-auto overflow-x-hidden"
+      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
       style={{ ...fontVarsFor(theme?.fontPair), scrollSnapType: "y mandatory" } as React.CSSProperties}
     >
       <HeroSection

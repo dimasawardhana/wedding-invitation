@@ -5,6 +5,7 @@ import { useInvitationStore } from "@/store/useInvitationStore";
 import { useInvitation } from "@/hooks/useInvitation";
 import { useRecordView } from "@/hooks/useRecordView";
 import { TEMPLATE_MAP, DEFAULT_TEMPLATE_ID } from "@/templates/registry";
+import { normalizeInvitationForDisplay } from "@/lib/invitation-display";
 
 export default function InvitationShell({ slug: slugProp }: { slug?: string }) {
   const { slug: storeSlug } = useInvitationStore();
@@ -13,8 +14,9 @@ export default function InvitationShell({ slug: slugProp }: { slug?: string }) {
   const slug = slugProp ?? storeSlug;
   useRecordView(slug);
   const { data, isLoading, isError } = useInvitation(slug);
-  const Template = data
-    ? (TEMPLATE_MAP[data.layoutId] ?? TEMPLATE_MAP[DEFAULT_TEMPLATE_ID])
+  const displayData = data ? normalizeInvitationForDisplay(data) : undefined;
+  const Template = displayData
+    ? (TEMPLATE_MAP[displayData.layoutId] ?? TEMPLATE_MAP[DEFAULT_TEMPLATE_ID])
     : undefined;
   if (isLoading) {
     return (
@@ -32,15 +34,15 @@ export default function InvitationShell({ slug: slugProp }: { slug?: string }) {
     );
   }
 
-  if (!Template) return null;
+  if (!Template || !displayData) return null;
 
   return (
     <div className="h-screen w-full overflow-hidden">
       <Template
-        data={data}
-        heroImage={data.heroImage || undefined}
-        theme={data.theme}
-        invitationId={data.invitationId}
+        data={displayData}
+        heroImage={displayData.heroImage || undefined}
+        theme={displayData.theme}
+        invitationId={displayData.invitationId}
         guestName={guestName}
       />
     </div>

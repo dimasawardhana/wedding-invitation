@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import { WeddingEvent } from "@/hooks/useInvitation";
+import { formatInvitationDate } from "@/lib/invitation-display";
 
 type Props = {
   weddingDate: string;
@@ -71,11 +72,11 @@ function EventCard({ event, index, inView, accentColor }: CardProps) {
       </div>
 
       <div className="border-t border-stone-100 pt-3 flex flex-col gap-0.5">
-        <p className="font-sans text-sm font-semibold text-stone-700">{event.locationName}</p>
-        <p className="font-sans text-xs text-stone-400 leading-relaxed">{event.address}</p>
+        <p className="font-sans text-sm font-semibold text-stone-700">{event.locationName || "Lokasi akan diumumkan"}</p>
+        {event.address && <p className="font-sans text-xs text-stone-400 leading-relaxed">{event.address}</p>}
       </div>
 
-      <a
+      {event.mapsUrl && <a
         href={event.mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
@@ -86,7 +87,7 @@ function EventCard({ event, index, inView, accentColor }: CardProps) {
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
         </svg>
         Lihat di Maps
-      </a>
+      </a>}
     </motion.div>
   );
 }
@@ -95,7 +96,7 @@ export default function EventDetail({ weddingDate, weddingEvents, accentColor = 
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const formatted = new Date(weddingDate).toLocaleDateString("id-ID", {
+  const formatted = formatInvitationDate(weddingDate, {
     weekday: "long",
     day: "numeric",
     month: "long",

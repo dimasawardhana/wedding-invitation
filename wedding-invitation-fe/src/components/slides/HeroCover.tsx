@@ -3,6 +3,7 @@
 import SafeImage from "@/components/ui/SafeImage";
 import { motion } from "framer-motion";
 import { useCountdown } from "@/hooks/useCountdown";
+import { formatInvitationDate } from "@/lib/invitation-display";
 type Props = {
   title: string;
   weddingDate: string;
@@ -20,7 +21,7 @@ export default function HeroCover({
   accentColor = "#D4AF37",
   guestName,
 }: Props) {
-  const formattedDate = new Date(weddingDate).toLocaleDateString("id-ID", {
+  const formattedDate = formatInvitationDate(weddingDate, {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -51,17 +52,17 @@ export default function HeroCover({
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-      {guestName && (
-        <motion.p
+      <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-6 text-center">
+        {guestName && (
+          <motion.p
           className="text-white/85 text-sm tracking-wide mb-2"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
         >
           Kepada Yth: {guestName}
-        </motion.p>
-      )}
-      <div className="absolute inset-0 flex flex-col items-center justify-end pb-24 px-6 text-center">
+          </motion.p>
+        )}
         <motion.h1
           className="font-playfair text-4xl md:text-5xl text-white leading-tight tracking-wide"
           initial={{ opacity: 0, y: 24 }}

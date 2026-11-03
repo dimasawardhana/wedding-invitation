@@ -2,6 +2,7 @@
 
 import { type InvitationData } from "@/hooks/useInvitation";
 import { TEMPLATE_MAP, DEFAULT_TEMPLATE_ID } from "@/templates/registry";
+import { normalizeInvitationForDisplay } from "@/lib/invitation-display";
 
 type ThemeConfig = {
   colorScheme: string;
@@ -23,7 +24,10 @@ function PreviewShell({ data, heroImage, gallery, theme, layoutId }: {
   layoutId?: string;
 }) {
   const Template = TEMPLATE_MAP[layoutId ?? ""] ?? TEMPLATE_MAP[DEFAULT_TEMPLATE_ID];
-  const previewData = { ...data, gallery: gallery?.map((g) => g.url) ?? data.gallery };
+  const previewData = normalizeInvitationForDisplay({
+    ...data,
+    gallery: gallery?.map((g) => g.url) ?? data.gallery,
+  });
   return (
     <div className="relative h-full w-full overflow-hidden bg-[#F8F5F2]">
       <Template
@@ -43,7 +47,7 @@ export default function PhoneFrame({ data, heroImage, gallery, theme, layoutId }
   layoutId?: string;
 }) {
   return (
-    <div className="relative select-none shrink-0">
+    <div className="relative shrink-0" data-testid="template-preview">
       <div
         className="relative"
         style={{
@@ -74,7 +78,7 @@ export default function PhoneFrame({ data, heroImage, gallery, theme, layoutId }
               position: "absolute",
               width: 375,
               height: 812,
-              transform: "scale(0.712)",
+              transform: "scale(0.704)",
               transformOrigin: "top left",
               left: 1,
               top: 0,

@@ -90,7 +90,10 @@ export async function fetchInvitation(
   });
   expect(res.ok(), `fetch invitation failed: ${await res.text()}`).toBeTruthy();
   const body = (await res.json()) as { data: Record<string, unknown> };
-  return body.data as never;
+  return {
+    ...body.data,
+    gallery: (body.data.gallery ?? []) as { id: string; url: string; caption: string }[],
+  } as never;
 }
 
 /** A 1x1 PNG — the smallest thing the upload endpoint accepts. */

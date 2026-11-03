@@ -45,7 +45,7 @@ type Props = {
 export default function SafeImage({ src, alt, fill = true, className, sizes, priority, variant = "gallery" }: Props) {
   const [error, setError] = useState(false);
 
-  if (error) return <Placeholder variant={variant} />;
+  if (error || !src.trim()) return <Placeholder variant={variant} />;
 
   return (
     <Image
