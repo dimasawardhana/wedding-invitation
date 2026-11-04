@@ -89,7 +89,7 @@ export default function MinimalistTemplate({
         color: INK,
       } as React.CSSProperties}
     >
-      <section className="min-h-screen relative" style={{ backgroundColor: PAPER }}>
+      <section className="relative h-screen" style={{ backgroundColor: PAPER }}>
         <HeroCover
           title={data.title}
           weddingDate={data.weddingDate}

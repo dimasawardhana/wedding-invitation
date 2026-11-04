@@ -98,7 +98,7 @@ export default function ClassicTemplate({
         backgroundColor: CHAMPAGNE,
       } as React.CSSProperties}
     >
-      <section className="min-h-screen relative p-4" style={{ backgroundColor: CHAMPAGNE }}>
+      <section className="relative h-screen p-4" style={{ backgroundColor: CHAMPAGNE }}>
         <div className="h-full min-h-[calc(100vh-2rem)] border p-1.5" style={{ borderColor: BORDER }}>
           <div className="h-full min-h-[calc(100vh-3.5rem)] border overflow-hidden relative" style={{ borderColor: BORDER }}>
             <HeroCover
