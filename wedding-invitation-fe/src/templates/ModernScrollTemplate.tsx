@@ -287,9 +287,12 @@ function CoupleSection({
                   variant="photo"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-stone-400 font-playfair text-3xl">
-                  {person.fullName[0]}
-                </div>
+                <SafeImage
+                  src=""
+                  alt={person.fullName}
+                  sizes="112px"
+                  variant={idx === 0 ? "groom" : "bride"}
+                />
               )}
             </div>
             <p className="font-playfair text-xl text-stone-800 leading-snug">
@@ -478,7 +481,14 @@ function GallerySection({
         Captured Memories
       </motion.p>
       {n === 0 ? (
-        <p className="text-white/30 text-sm">Belum ada foto</p>
+        <div className="w-full max-w-sm flex-1 grid grid-cols-2 gap-1" style={{ minHeight: 360 }}>
+          <div className="relative rounded-xl overflow-hidden">
+            <SafeImage src="/defaults/gallery-1.jpg" alt="Gallery 1" className="object-cover" sizes="300px" variant="gallery" />
+          </div>
+          <div className="relative rounded-xl overflow-hidden">
+            <SafeImage src="/defaults/gallery-2.jpg" alt="Gallery 2" className="object-cover" sizes="300px" variant="gallery-alt" />
+          </div>
+        </div>
       ) : (
         <div
           className="w-full max-w-sm flex-1 flex"

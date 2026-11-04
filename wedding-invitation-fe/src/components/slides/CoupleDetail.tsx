@@ -42,9 +42,10 @@ type ProfileProps = {
   order: string;
   variants: Variants;
   accentColor?: string;
+  photoVariant?: "groom" | "bride" | "photo";
 };
 
-function Profile({ fullName, photo, fatherName, motherName, order, variants, accentColor = "#C9A96E" }: ProfileProps) {
+function Profile({ fullName, photo, fatherName, motherName, order, variants, accentColor = "#C9A96E", photoVariant = "photo" }: ProfileProps) {
   const parents = [fatherName, motherName].filter(Boolean).join(" & ");
   return (
     <motion.div
@@ -52,7 +53,7 @@ function Profile({ fullName, photo, fatherName, motherName, order, variants, acc
       className="flex flex-col items-center gap-3 px-8"
     >
       <div className="relative w-24 h-24 rounded-full ring-offset-2 ring-offset-[#F8F5F2] overflow-hidden shrink-0" style={{ outline: `1px solid ${accentColor}` }}>
-        <SafeImage src={photo} alt={fullName} className="object-cover" variant="photo" />
+        <SafeImage src={photo} alt={fullName} className="object-cover" variant={photoVariant} />
       </div>
 
       <motion.h2
@@ -89,6 +90,7 @@ export default function CoupleDetail({ groom, bride, accentColor = "#C9A96E" }: 
           order={groom.order}
           variants={groomVariants}
           accentColor={accentColor}
+          photoVariant="groom"
         />
         
         <motion.div
@@ -110,6 +112,7 @@ export default function CoupleDetail({ groom, bride, accentColor = "#C9A96E" }: 
           order={bride.order}
           variants={brideVariants}
           accentColor={accentColor}
+          photoVariant="bride"
         />
       </motion.div>
     </div>

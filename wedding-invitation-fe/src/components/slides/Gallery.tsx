@@ -84,10 +84,19 @@ export default function Gallery({ gallery, videoUrl, forceInView }: Props) {
 
       <div ref={ref} className="flex-1 min-h-0">
         {n === 0 && (
-          <div className="flex items-center justify-center h-full text-stone-400 text-sm">
+          <div className="w-full h-full">
             {videoUrl ? (
               <video src={videoUrl} autoPlay muted loop playsInline className="w-full h-full object-cover rounded-lg" />
-            ) : "No photos"}
+            ) : (
+              <div className="w-full h-full grid grid-cols-2 gap-2 rounded-lg overflow-hidden">
+                <div className="relative rounded overflow-hidden">
+                  <SafeImage src="/defaults/gallery-1.jpg" alt="Gallery 1" className="object-cover" sizes="50vw" variant="gallery" />
+                </div>
+                <div className="relative rounded overflow-hidden">
+                  <SafeImage src="/defaults/gallery-2.jpg" alt="Gallery 2" className="object-cover" sizes="50vw" variant="gallery-alt" />
+                </div>
+              </div>
+            )}
           </div>
         )}
 

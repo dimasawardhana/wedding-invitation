@@ -42,7 +42,7 @@ export default function HeroCover({
         }}
       >
         <SafeImage
-          src={heroImage || "/hero-default.jpg"}
+          src={heroImage}
           alt="Wedding hero"
           priority
           className="object-cover"
