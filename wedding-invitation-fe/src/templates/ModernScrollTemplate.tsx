@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import SafeImage from "@/components/ui/SafeImage";
 import { motion } from "framer-motion";
+import TemplateGate from "@/components/engine/TemplateGate";
 import { MapPin, Clock, Calendar, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { type TemplateProps } from "./types";
@@ -766,37 +767,52 @@ export default function ModernScrollTemplate({
     containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  const dateLabel = formatInvitationDate(data.weddingDate, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <div
-      ref={containerRef}
-      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
-      style={{ ...fontVarsFor(theme?.fontPair), scrollSnapType: "y mandatory" } as React.CSSProperties}
-    >
-      <HeroSection
-        data={data}
-        heroImage={heroImage}
-        accent={accent}
-        onScroll={scrollToContent}
-        guestName={guestName}
-      />
-      <div ref={sectionsRef}>
-        <CoupleSection data={data} accent={accent} />
-        <JourneySection data={data} accent={accent} />
-        <EventsSection data={data} accent={accent} />
-        <GallerySection data={data} accent={accent} />
-        <section className="min-h-screen snap-start">
-          <RSVPForm initialWishes={data.wishes} invitationId={invitationId} />
-        </section>
-        {(data.bankAccounts.length > 0 || data.qrisAccounts.length > 0) && (
-          <GiftSection data={data} accent={accent} />
-        )}
-        <ClosingSection
+    <div className="relative h-full w-full overflow-hidden">
+      <div
+        ref={containerRef}
+        className="h-full w-full overflow-y-auto overflow-x-hidden"
+        style={{ ...fontVarsFor(theme?.fontPair), scrollSnapType: "y mandatory" } as React.CSSProperties}
+      >
+        <HeroSection
           data={data}
+          heroImage={heroImage}
           accent={accent}
-          onReplay={scrollToTop}
+          onScroll={scrollToContent}
           guestName={guestName}
         />
+        <div ref={sectionsRef}>
+          <CoupleSection data={data} accent={accent} />
+          <JourneySection data={data} accent={accent} />
+          <EventsSection data={data} accent={accent} />
+          <GallerySection data={data} accent={accent} />
+          <section className="min-h-screen snap-start">
+            <RSVPForm initialWishes={data.wishes} invitationId={invitationId} />
+          </section>
+          {(data.bankAccounts.length > 0 || data.qrisAccounts.length > 0) && (
+            <GiftSection data={data} accent={accent} />
+          )}
+          <ClosingSection
+            data={data}
+            accent={accent}
+            onReplay={scrollToTop}
+            guestName={guestName}
+          />
+        </div>
       </div>
+      <TemplateGate
+        variant="envelope"
+        accent={accent}
+        names={`${data.groomName} & ${data.brideName}`}
+        date={dateLabel}
+        onOpen={scrollToContent}
+      />
     </div>
   );
 }

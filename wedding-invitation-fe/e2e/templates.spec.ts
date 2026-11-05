@@ -58,6 +58,29 @@ async function updateInvitation(
   expect(response.ok(), `PATCH failed: ${await response.text()}`).toBeTruthy();
 }
 
+/**
+ * Each template has a distinct opening ritual:
+ *  - storyteller: "Buka Undangan" button
+ *  - modern-scroll: envelope gate, islamic: arch doors, rustic: wax seal,
+ *    classic: gatefold doors (all click-to-open)
+ *  - minimalist: gesture gate (tap anywhere)
+ * Content is mounted under the gate from the start, so text assertions pass
+ * before opening; open the invitation anyway to exercise the reveal.
+ */
+async function openInvitation(page: import("@playwright/test").Page) {
+  const gate = page.locator("[data-gate]");
+  const bukaButton = page.getByRole("button", { name: /buka undangan/i });
+
+  // Gate takes priority: some templates (modern-scroll) also keep a hero
+  // button behind the overlay, which intercepts clicks.
+  if (await gate.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await gate.click({ position: { x: 200, y: 300 } });
+  } else if (await bukaButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
+    await bukaButton.first().click();
+  }
+  await gate.waitFor({ state: "detached", timeout: 8000 }).catch(() => {});
+}
+
 test.describe("Invitation templates", () => {
   test("every registered template renders complete public content without invalid states", async ({
     page,
@@ -82,6 +105,7 @@ test.describe("Invitation templates", () => {
       await page.goto(`/${account.slug}?to=Tamu%20Undangan`, { timeout: NAV_TIMEOUT });
       await expect(page.locator("body")).toContainText("Arga", { timeout: NAV_TIMEOUT });
       await expect(page.locator("body")).toContainText("Bunga");
+      await openInvitation(page);
       await expect(page.getByText(/17 Agustus 2030/).first()).toBeVisible();
       await expect(page.locator("body")).not.toContainText(/invalid date/i);
       expect(errors, `${layoutId} emitted browser console errors`).toEqual([]);

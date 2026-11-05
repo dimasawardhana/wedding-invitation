@@ -148,10 +148,10 @@ export default function StorytellerTemplate({
         <motion.div
           key={currentIndex}
           className="absolute inset-0"
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "-100%" }}
-          transition={{ type: "spring", stiffness: 100, damping: 20 }}
+          initial={{ opacity: 0, scale: 1.06, filter: "blur(6px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
+          transition={{ duration: 0.85, ease: [0.32, 0.72, 0.35, 1] }}
         >
           {renderSlide(currentIndex)}
         </motion.div>

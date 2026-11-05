@@ -11,6 +11,7 @@ type Props = {
   heroImage?: string;
   accentColor?: string;
   guestName?: string;
+  showOpenButton?: boolean;
 };
 
 export default function HeroCover({
@@ -20,6 +21,7 @@ export default function HeroCover({
   heroImage,
   accentColor = "#D4AF37",
   guestName,
+  showOpenButton = true,
 }: Props) {
   const formattedDate = formatInvitationDate(weddingDate, {
     day: "numeric",
@@ -112,23 +114,25 @@ export default function HeroCover({
           </motion.div>
         )}
 
-        <motion.button
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpen();
-          }}
-          className="relative z-50 mt-10 px-8 py-3 text-sm tracking-[0.25em] uppercase backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-colors"
-          style={{ border: `1px solid ${accentColor}`, color: accentColor }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
-        >
-          <span
-            className="absolute inset-0 rounded-sm animate-ping border opacity-60"
-            style={{ borderColor: `${accentColor}4d` }}
-          />
-          Buka Undangan
-        </motion.button>
+        {showOpenButton && (
+          <motion.button
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen();
+            }}
+            className="relative z-50 mt-10 px-8 py-3 text-sm tracking-[0.25em] uppercase backdrop-blur-sm bg-white/10 hover:bg-white/20 transition-colors"
+            style={{ border: `1px solid ${accentColor}`, color: accentColor }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+          >
+            <span
+              className="absolute inset-0 rounded-sm animate-ping border opacity-60"
+              style={{ borderColor: `${accentColor}4d` }}
+            />
+            Buka Undangan
+          </motion.button>
+        )}
       </div>
     </div>
   );

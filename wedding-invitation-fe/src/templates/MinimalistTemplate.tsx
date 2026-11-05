@@ -8,6 +8,7 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import TemplateGate from "@/components/engine/TemplateGate";
 import HeroCover from "@/components/slides/HeroCover";
 import CoupleDetail from "@/components/slides/CoupleDetail";
 import LoveJourney from "@/components/slides/LoveJourney";
@@ -81,74 +82,83 @@ export default function MinimalistTemplate({
   }
 
   return (
-    <div
-      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
-      style={{
-        ...fontVarsFor(theme?.fontPair),
-        backgroundColor: PAPER,
-        color: INK,
-      } as React.CSSProperties}
-    >
-      <section className="relative h-screen" style={{ backgroundColor: PAPER }}>
-        <HeroCover
-          title={data.title}
-          weddingDate={data.weddingDate}
-          heroImage={heroImage}
-          accentColor={accent}
-          onOpen={scrollToContent}
-          guestName={guestName}
-        />
-      </section>
-
-      <Block index="01" title="Mempelai">
-        <CoupleDetail groom={data.groom} bride={data.bride} accentColor={INK} />
-      </Block>
-
-      {data.weddingEvents.length > 0 && (
-        <Block index="02" title="Acara" tint>
-          <EventDetail
+    <div className="relative h-full w-full overflow-hidden">
+      <div
+        className="h-full w-full overflow-y-auto overflow-x-hidden"
+        style={{
+          ...fontVarsFor(theme?.fontPair),
+          backgroundColor: PAPER,
+          color: INK,
+        } as React.CSSProperties}
+      >
+        <section className="relative h-screen" style={{ backgroundColor: PAPER }}>
+          <HeroCover
+            title={data.title}
             weddingDate={data.weddingDate}
-            weddingEvents={data.weddingEvents}
-            accentColor={INK}
+            heroImage={heroImage}
+            accentColor={accent}
+            onOpen={scrollToContent}
+            guestName={guestName}
+            showOpenButton={false}
+          />
+        </section>
+
+        <Block index="01" title="Mempelai">
+          <CoupleDetail groom={data.groom} bride={data.bride} accentColor={INK} />
+        </Block>
+
+        {data.weddingEvents.length > 0 && (
+          <Block index="02" title="Acara" tint>
+            <EventDetail
+              weddingDate={data.weddingDate}
+              weddingEvents={data.weddingEvents}
+              accentColor={INK}
+            />
+          </Block>
+        )}
+
+        {data.events.length > 0 && (
+          <Block index="03" title="Perjalanan">
+            <LoveJourney events={data.events} accentColor={INK} />
+          </Block>
+        )}
+
+        {data.gallery.length > 0 && (
+          <Block index="04" title="Galeri" tint>
+            <Gallery gallery={data.gallery} videoUrl={data.videoUrl} />
+          </Block>
+        )}
+
+        {(data.bankAccounts.length > 0 || data.qrisAccounts.length > 0) && (
+          <Block index="05" title="Amplop Digital">
+            <DigitalGift bankAccounts={data.bankAccounts} qrisAccounts={data.qrisAccounts} />
+          </Block>
+        )}
+
+        <Block index="06" title="RSVP &amp; Ucapan" tint>
+          <div className="text-sm text-stone-500 mb-6">
+            Mohon konfirmasi kehadiran Anda.
+          </div>
+          <RSVPForm initialWishes={data.wishes} invitationId={invitationId} />
+        </Block>
+
+        <Block index="07" title="Penutup">
+          <Closing
+            groomName={data.groomName}
+            brideName={data.brideName}
+            slug={data.slug}
+            weddingDate={data.weddingDate}
+            guestName={guestName}
+            onReplay={scrollToContent}
           />
         </Block>
-      )}
-
-      {data.events.length > 0 && (
-        <Block index="03" title="Perjalanan">
-          <LoveJourney events={data.events} accentColor={INK} />
-        </Block>
-      )}
-
-      {data.gallery.length > 0 && (
-        <Block index="04" title="Galeri" tint>
-          <Gallery gallery={data.gallery} videoUrl={data.videoUrl} />
-        </Block>
-      )}
-
-      {(data.bankAccounts.length > 0 || data.qrisAccounts.length > 0) && (
-        <Block index="05" title="Amplop Digital">
-          <DigitalGift bankAccounts={data.bankAccounts} qrisAccounts={data.qrisAccounts} />
-        </Block>
-      )}
-
-      <Block index="06" title="RSVP &amp; Ucapan" tint>
-        <div className="text-sm text-stone-500 mb-6">
-          Mohon konfirmasi kehadiran Anda.
-        </div>
-        <RSVPForm initialWishes={data.wishes} invitationId={invitationId} />
-      </Block>
-
-      <Block index="07" title="Penutup">
-        <Closing
-          groomName={data.groomName}
-          brideName={data.brideName}
-          slug={data.slug}
-          weddingDate={data.weddingDate}
-          guestName={guestName}
-          onReplay={scrollToContent}
-        />
-      </Block>
+      </div>
+      <TemplateGate
+        variant="gesture"
+        accent={accent}
+        names={`${data.groomName} & ${data.brideName}`}
+        onOpen={scrollToContent}
+      />
     </div>
   );
 }

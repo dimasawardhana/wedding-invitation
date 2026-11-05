@@ -9,6 +9,7 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import TemplateGate from "@/components/engine/TemplateGate";
 import HeroCover from "@/components/slides/HeroCover";
 import CoupleDetail from "@/components/slides/CoupleDetail";
 import LoveJourney from "@/components/slides/LoveJourney";
@@ -91,30 +92,32 @@ export default function RusticTemplate({
   }
 
   return (
-    <div
-      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
-      style={{
-        ...fontVarsFor(theme?.fontPair),
-        backgroundColor: KRAFT,
-      } as React.CSSProperties}
-    >
-      <section className="min-h-screen relative" style={{ backgroundColor: KRAFT }}>
-        <div className="absolute inset-0 p-3 sm:p-6">
-          <div className="h-full w-full rounded-lg border-2 border-dashed overflow-hidden relative" style={{ borderColor: `${BARK}55` }}>
-            <HeroCover
-              title={data.title}
-              weddingDate={data.weddingDate}
-              heroImage={heroImage}
-              accentColor={accent}
-              onOpen={scrollToContent}
-              guestName={guestName}
-            />
+    <div className="relative h-full w-full overflow-hidden">
+      <div
+        className="h-full w-full overflow-y-auto overflow-x-hidden"
+        style={{
+          ...fontVarsFor(theme?.fontPair),
+          backgroundColor: KRAFT,
+        } as React.CSSProperties}
+      >
+        <section className="min-h-screen relative" style={{ backgroundColor: KRAFT }}>
+          <div className="absolute inset-0 p-3 sm:p-6">
+            <div className="h-full w-full rounded-lg border-2 border-dashed overflow-hidden relative" style={{ borderColor: `${BARK}55` }}>
+              <HeroCover
+                title={data.title}
+                weddingDate={data.weddingDate}
+                heroImage={heroImage}
+                accentColor={accent}
+                onOpen={scrollToContent}
+                guestName={guestName}
+                showOpenButton={false}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div className="px-4 py-16 space-y-14 pb-24">
-        <div ref={firstSectionRef}>
+        <div className="px-4 py-16 space-y-14 pb-24">
+          <div ref={firstSectionRef}>
           <PaperCard>
             <SectionTitle>Kami Menikah</SectionTitle>
             <p className="font-sans text-sm text-stone-600 text-center leading-relaxed">
@@ -178,6 +181,13 @@ export default function RusticTemplate({
           />
         </PaperCard>
       </div>
+      </div>
+      <TemplateGate
+        variant="seal"
+        accent={BARK}
+        names={`${data.groomName} & ${data.brideName}`}
+        onOpen={scrollToContent}
+      />
     </div>
   );
 }

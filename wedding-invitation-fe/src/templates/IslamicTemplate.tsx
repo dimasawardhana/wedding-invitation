@@ -9,6 +9,7 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import TemplateGate from "@/components/engine/TemplateGate";
 import HeroCover from "@/components/slides/HeroCover";
 import CoupleDetail from "@/components/slides/CoupleDetail";
 import LoveJourney from "@/components/slides/LoveJourney";
@@ -89,34 +90,36 @@ export default function IslamicTemplate({
   }
 
   return (
-    <div
-      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
-      style={{
-        ...fontVarsFor(theme?.fontPair),
-        scrollSnapType: "y mandatory",
-        backgroundColor: IVORY,
-      } as React.CSSProperties}
-    >
-      {/* Opening — cover slide fills the viewport, arch-masked by ornament frame */}
-      <section className="min-h-screen snap-start relative" style={{ backgroundColor: IVORY }}>
-        <div className="absolute inset-0 p-3 sm:p-5">
-          <div
-            className="h-full w-full rounded-[2rem] border overflow-hidden relative"
-            style={{ borderColor: GOLD_LINE, borderWidth: 1 }}
-          >
-            <HeroCover
-              title={data.title}
-              weddingDate={data.weddingDate}
-              heroImage={heroImage}
-              accentColor={accent}
-              onOpen={scrollToContent}
-              guestName={guestName}
-            />
+    <div className="relative h-full w-full overflow-hidden">
+      <div
+        className="h-full w-full overflow-y-auto overflow-x-hidden"
+        style={{
+          ...fontVarsFor(theme?.fontPair),
+          scrollSnapType: "y mandatory",
+          backgroundColor: IVORY,
+        } as React.CSSProperties}
+      >
+        {/* Opening — cover slide fills the viewport, arch-masked by ornament frame */}
+        <section className="min-h-screen snap-start relative" style={{ backgroundColor: IVORY }}>
+          <div className="absolute inset-0 p-3 sm:p-5">
+            <div
+              className="h-full w-full rounded-[2rem] border overflow-hidden relative"
+              style={{ borderColor: GOLD_LINE, borderWidth: 1 }}
+            >
+              <HeroCover
+                title={data.title}
+                weddingDate={data.weddingDate}
+                heroImage={heroImage}
+                accentColor={accent}
+                onOpen={scrollToContent}
+                guestName={guestName}
+                showOpenButton={false}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div ref={sectionsRef}>
+        <div ref={sectionsRef}>
         {/* Bismillah opening */}
         <Section id="bismillah">
           <motion.div {...fadeUp} className="text-center space-y-4">
@@ -197,7 +200,14 @@ export default function IslamicTemplate({
             onReplay={scrollToContent}
           />
         </Section>
+        </div>
       </div>
+      <TemplateGate
+        variant="arch"
+        accent={accent}
+        names={`${data.groomName} & ${data.brideName}`}
+        onOpen={scrollToContent}
+      />
     </div>
   );
 }

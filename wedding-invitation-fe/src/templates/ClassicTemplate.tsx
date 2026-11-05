@@ -9,6 +9,7 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import TemplateGate from "@/components/engine/TemplateGate";
 import HeroCover from "@/components/slides/HeroCover";
 import CoupleDetail from "@/components/slides/CoupleDetail";
 import LoveJourney from "@/components/slides/LoveJourney";
@@ -91,29 +92,31 @@ export default function ClassicTemplate({
   }
 
   return (
-    <div
-      className="h-full min-h-full w-full overflow-y-auto overflow-x-hidden"
-      style={{
-        ...fontVarsFor(theme?.fontPair),
-        backgroundColor: CHAMPAGNE,
-      } as React.CSSProperties}
-    >
-      <section className="relative h-screen p-4" style={{ backgroundColor: CHAMPAGNE }}>
-        <div className="h-full min-h-[calc(100vh-2rem)] border p-1.5" style={{ borderColor: BORDER }}>
-          <div className="h-full min-h-[calc(100vh-3.5rem)] border overflow-hidden relative" style={{ borderColor: BORDER }}>
-            <HeroCover
-              title={data.title}
-              weddingDate={data.weddingDate}
-              heroImage={heroImage}
-              accentColor={accent}
-              onOpen={scrollToContent}
-              guestName={guestName}
-            />
+    <div className="relative h-full w-full overflow-hidden">
+      <div
+        className="h-full w-full overflow-y-auto overflow-x-hidden"
+        style={{
+          ...fontVarsFor(theme?.fontPair),
+          backgroundColor: CHAMPAGNE,
+        } as React.CSSProperties}
+      >
+        <section className="relative h-screen p-4" style={{ backgroundColor: CHAMPAGNE }}>
+          <div className="h-full min-h-[calc(100vh-2rem)] border p-1.5" style={{ borderColor: BORDER }}>
+            <div className="h-full min-h-[calc(100vh-3.5rem)] border overflow-hidden relative" style={{ borderColor: BORDER }}>
+              <HeroCover
+                title={data.title}
+                weddingDate={data.weddingDate}
+                heroImage={heroImage}
+                accentColor={accent}
+                onOpen={scrollToContent}
+                guestName={guestName}
+                showOpenButton={false}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <FormalSection title="Undangan Pernikahan">
+        <FormalSection title="Undangan Pernikahan">
         <div className="text-center space-y-4">
           <p className="font-sans text-sm text-stone-600 leading-relaxed">
             Kepada Yth.
@@ -177,6 +180,13 @@ export default function ClassicTemplate({
           onReplay={scrollToContent}
         />
       </FormalSection>
+      </div>
+      <TemplateGate
+        variant="gatefold"
+        accent={BORDER}
+        names={`${data.groomName} & ${data.brideName}`}
+        onOpen={scrollToContent}
+      />
     </div>
   );
 }
